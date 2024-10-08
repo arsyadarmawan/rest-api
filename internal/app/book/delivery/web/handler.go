@@ -9,12 +9,6 @@ import (
 func MakeGetAllBooks(usecase usecase.Book) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
-		//idParam := chi.URLParam(r, "id")
-		//id, err := strconv.Atoi(idParam)
-		//if err != nil {
-		//	render.Status(r, http.StatusOK)
-		//	return
-		//}
 		resp, err := usecase.Get(ctx)
 		if err != nil {
 			render.Status(r, http.StatusInternalServerError)

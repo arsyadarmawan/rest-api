@@ -33,6 +33,6 @@ func (b BookRegistry) RegisterRoutesTo(r *chi.Mux) *chi.Mux {
 		// POST route for creating a new book
 		r.Post("/book", MakeRequestBook(b.Opts.Book))
 	})
-	r.Get("/books/{id}", MakeGetAllBooks(b.Opts.Book))
+	r.Get("/books", MakeGetAllBooks(b.Opts.Book))
 	return nil
 }

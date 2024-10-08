@@ -1,12 +1,14 @@
 package chi
 
 import (
+	"github.com/arsyadarmawan/asynq-distributed-task/enqueue/enqueueimpl"
 	chi2 "github.com/go-chi/chi"
 	"github.com/go-chi/cors"
 	"net/http"
 	"rest-api/internal/app/book/delivery/web"
 	"rest-api/internal/app/book/repository/repositoryimpl"
 	"rest-api/internal/app/book/usecase/usecaseimpl"
+	"rest-api/internal/pkg/asynq"
 	"rest-api/internal/pkg/mongo"
 	"time"
 )
@@ -29,8 +31,11 @@ func bookRoutes(r *chi2.Mux) {
 	bookRepository := repositoryimpl.NewBookRepository(repositoryimpl.BookRepositoryOpts{
 		DB: config,
 	})
+
+	enq := enqueueimpl.NewEnqueuer(asynq.AsynqClient)
 	bookUsecaseimpl := usecaseimpl.NewBookImpl(usecaseimpl.BookOpts{
 		bookRepository,
+		enq,
 	})
 	bookRoute := web.NewBookRegistry(web.BookRegistryOpts{
 		bookUsecaseimpl,

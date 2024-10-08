@@ -65,3 +65,12 @@ func (b BookRepository) Create(ctx context.Context, record *ent.Book) error {
 	}
 	return nil
 }
+
+func (b BookRepository) DeleteById(ctx context.Context, id string) error {
+	filter := bson.M{"_id": id}
+	_, err := b.collectionName().DeleteOne(ctx, filter)
+	if err != nil {
+		return err
+	}
+	return nil
+}

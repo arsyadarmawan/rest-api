@@ -2,12 +2,14 @@ package main
 
 import (
 	"net/http"
+	"rest-api/internal/pkg/asynq"
 	"rest-api/internal/pkg/centralized"
 	"rest-api/internal/pkg/chi"
 )
 
 func main() {
 	centralized.Centralized()
+	asynq.InitServeMuxAsynq()
 	routes := chi.NewChiRoutes()
 	Listen("localhost:8181", routes)
 }

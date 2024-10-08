@@ -2,15 +2,19 @@ package usecaseimpl
 
 import (
 	"context"
+	"github.com/arsyadarmawan/asynq-distributed-task/enqueue"
+	"github.com/google/uuid"
 	"rest-api/internal/app/book/repository"
 	"rest-api/internal/app/book/usecase"
 	"rest-api/internal/app/ent"
+	"rest-api/internal/pkg/commonval"
 	"strconv"
 	"time"
 )
 
 type BookOpts struct {
-	Repository repository.BookRepository
+	Repository    repository.BookRepository
+	AsynqEnqueuer enqueue.AsynqEnqueuer
 }
 
 type Book struct {
@@ -30,6 +34,7 @@ func (b Book) Get(ctx context.Context) (records []usecase.BookResponse, err erro
 	}
 	for _, record := range bookRecords {
 		records = append(records, usecase.BookResponse{
+			Id:          record.ID,
 			Name:        record.Name,
 			Description: record.Description,
 		})
@@ -50,11 +55,20 @@ func (b Book) GetById(ctx context.Context, id int) (usecase.BookResponse, error)
 }
 
 func (b Book) Create(ctx context.Context, cmd usecase.BookRequest) error {
-	return b.Opts.Repository.Create(ctx, b.converCmdIntoEnt(cmd))
+	ent := b.convertCmdIntoEnt(cmd)
+	if err := b.Opts.AsynqEnqueuer.Enqueue(ctx, commonval.BookWorkerAsynq, ent.ID); err != nil {
+		return err
+	}
+	return b.Opts.Repository.Create(ctx, ent)
 }
 
-func (b Book) converCmdIntoEnt(cmd usecase.BookRequest) *ent.Book {
+func (b Book) Delete(ctx context.Context, id string) error {
+	return b.Opts.Repository.DeleteById(ctx, id)
+}
+
+func (b Book) convertCmdIntoEnt(cmd usecase.BookRequest) *ent.Book {
 	return &ent.Book{
+		ID:          uuid.New().String(),
 		Name:        cmd.Name,
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),

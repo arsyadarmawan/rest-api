@@ -2,6 +2,7 @@ package centralized
 
 import (
 	"github.com/spf13/viper"
+	"rest-api/internal/pkg/asynq"
 	"rest-api/internal/pkg/config"
 	"rest-api/internal/pkg/mongo"
 )
@@ -14,6 +15,8 @@ func Centralized() {
 		panic("1231231")
 	}
 	mongo.ProviderNoSQL(EnvConfig)
+	asynq.InitAsynq(EnvConfig.Redis)
+	asynq.InitAsynqServer(EnvConfig.Redis)
 }
 
 func getConfiguration(environment *config.Environment) error {
