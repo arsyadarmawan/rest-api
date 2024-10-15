@@ -9,7 +9,7 @@ import (
 
 func main() {
 	centralized.Centralized()
-	asynq.InitServeMuxAsynq()
+	go asynq.InitServeMuxAsynq()
 	routes := chi.NewChiRoutes()
 	Listen("localhost:8181", routes)
 }
