@@ -7,6 +7,7 @@ import (
 	"github.com/go-resty/resty/v2"
 	"golang.org/x/oauth2/google"
 	"log"
+	"net/url"
 	"os"
 	"time"
 )
@@ -36,23 +37,88 @@ type GCSObjectList struct {
 }
 
 const (
-	keyFilePath = "/Users/arsyadthareeq/Personal/credentials/gcp_arsyad.json"
+	keyFilePath = "C:\\gcs_arsyad.json"
 )
 
 func main() {
 	bucketName := "development-me"
-	folderName := "dummy-folder-2"
+	folderName := "dummy-folder"
 
 	isExist, err := folderExists(bucketName, folderName, keyFilePath)
 	if err != nil {
-		fmt.Sprintf("gada bangsat")
+		fmt.Sprintf("gada dong")
 	}
 	if !isExist {
-		if errCreate := createFolder(bucketName, "dummy-folder-2", keyFilePath); errCreate != nil {
+		if errCreate := createFolder(bucketName, folderName, keyFilePath); errCreate != nil {
 			fmt.Errorf(errCreate.Error())
 		}
 		//getRootFolderForCLient(bucketName, folderName)
 	}
+	if errDelete := deleteFolder(bucketName, folderName, keyFilePath); errDelete != nil {
+
+		fmt.Errorf("Error deleting folder: %v", errDelete)
+	}
+	fmt.Println("success")
+}
+
+func deleteFolder(bucketName, folderName, keyFilePath string) error {
+	// Get the access token
+	token, err := getAccessToken(keyFilePath)
+	if err != nil {
+		return fmt.Errorf("failed to get access token: %w", err)
+	}
+
+	// Initialize Resty client
+	client := resty.New()
+
+	// Step 1: List all objects in the folder
+	listURL := fmt.Sprintf("https://storage.googleapis.com/storage/v1/b/%s/o", bucketName)
+	resp, err := client.R().
+		SetQueryParams(map[string]string{
+			"prefix":    folderName + "/",
+			"delimiter": "/",
+			// Prefix for "folder"
+		}).
+		SetAuthToken(token).
+		Get(listURL)
+
+	if err != nil {
+		return fmt.Errorf("failed to list objects in folder: %w", err)
+	}
+	if resp.IsError() {
+		return fmt.Errorf("error listing objects: %s", resp.Status())
+	}
+
+	// Parse the response to get object names
+	var result GCSObjectList
+	if err = json.Unmarshal(resp.Body(), &result); err != nil {
+		return fmt.Errorf("failed to parse object list: %w", err)
+	}
+
+	if len(result.Items) == 0 {
+		fmt.Printf("No objects found in folder %s; nothing to delete.\n", folderName)
+		return nil
+	}
+
+	// Step 2: Delete each object in the folder
+	for _, item := range result.Items {
+		// Construct URL for each object to delete
+		encodedName := url.PathEscape(item.Name)
+		deleteURL := fmt.Sprintf("https://storage.googleapis.com/storage/v1/b/%s/o/%s", bucketName, encodedName)
+
+		deleteResp, err := client.R().
+			SetAuthToken(token).
+			Delete(deleteURL)
+		if err != nil {
+			return fmt.Errorf("failed to delete object %s: %w", item.Name, err)
+		}
+		if deleteResp.IsError() {
+			return fmt.Errorf("error deleting object %s: %s", item.Name, deleteResp.Status())
+		}
+		fmt.Printf("Deleted object: %s\n", item.Name)
+	}
+	fmt.Printf("Folder %s and all contents deleted successfully\n", folderName)
+	return nil
 }
 
 func getRootFolderForCLient(bucketName, folderName string) {
@@ -126,7 +192,7 @@ func getAccessToken(keyFilePath string) (string, error) {
 	}
 
 	// Parse JSON credentials to obtain token
-	credentials, err := google.CredentialsFromJSON(context.Background(), jsonKey, "https://www.googleapis.com/auth/devstorage.read_only")
+	credentials, err := google.CredentialsFromJSON(context.Background(), jsonKey, "https://www.googleapis.com/auth/devstorage.full_control")
 	if err != nil {
 		return "", fmt.Errorf("failed to parse credentials: %w", err)
 	}
