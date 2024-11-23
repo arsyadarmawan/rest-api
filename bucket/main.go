@@ -37,12 +37,12 @@ type GCSObjectList struct {
 }
 
 const (
-	keyFilePath = "C:\\gcs_arsyad.json"
+	keyFilePath = "/Users/arsyadthareeq/Personal/credentials/gcp_arsyad.json"
 )
 
 func main() {
 	bucketName := "development-me"
-	folderName := "dummy-folder"
+	folderName := "arsyadthareq"
 
 	isExist, err := folderExists(bucketName, folderName, keyFilePath)
 	if err != nil {
@@ -54,10 +54,10 @@ func main() {
 		}
 		//getRootFolderForCLient(bucketName, folderName)
 	}
-	if errDelete := deleteFolder(bucketName, folderName, keyFilePath); errDelete != nil {
-
-		fmt.Errorf("Error deleting folder: %v", errDelete)
-	}
+	//if errDelete := deleteFolder(bucketName, folderName, keyFilePath); errDelete != nil {
+	//
+	//	fmt.Errorf("Error deleting folder: %v", errDelete)
+	//}
 	fmt.Println("success")
 }
 
@@ -217,9 +217,10 @@ func createFolder(bucketName, folderName, keyFilePath string) error {
 	client := resty.New()
 
 	// The GCS URL for uploading objects
-	url := fmt.Sprintf("https://storage.googleapis.com/upload/storage/v1/b/%s/o?uploadType=media&name=%s", bucketName, folderName+"/")
-
+	//url := fmt.Sprintf("https://storage.googleapis.com/upload/storage/v1/b/%s/o?uploadType=media&name=%s", bucketName, folderName+"/")
+	url := fmt.Sprintf("https://storage.googleapis.com/upload/storage/v1/b/%s/o?uploadType=media&name=%s/", bucketName, folderName)
 	// Make the request to create an empty object with the folder name
+	"https://storage.googleapis.com/storage/v1/b/development-me/o?uploadType=media&name=arsyadthareq/"
 	resp, err := client.R().
 		SetAuthToken(token).
 		SetHeader("Content-Type", "application/octet-stream").
