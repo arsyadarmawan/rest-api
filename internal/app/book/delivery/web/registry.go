@@ -3,6 +3,7 @@ package web
 import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/httprate"
+	"github.com/go-chi/render"
 	"net/http"
 	"rest-api/internal/app/book/usecase"
 	"time"
@@ -24,15 +25,16 @@ func NewBookRegistry(opts BookRegistryOpts) *BookRegistry {
 
 func (b BookRegistry) RegisterRoutesTo(r *chi.Mux) *chi.Mux {
 	r.With(httprate.Limit(
-		1,
-		time.Minute,
+		3,
+		time.Second*30,
 		httprate.WithLimitHandler(func(w http.ResponseWriter, r *http.Request) {
-			http.Error(w, `{"error": "Rate-limited. Please, slow down."}`, http.StatusTooManyRequests)
+			render.JSON(w, r, map[string]interface{}{"error": "rate limit exceeded"})
+			render.Status(r, http.StatusTooManyRequests)
 		}),
 	)).Group(func(r chi.Router) {
-		// POST route for creating a new book
 		r.Post("/book", MakeRequestBook(b.Opts.Book))
+		r.Get("/books", MakeGetAllBooks(b.Opts.Book))
+		r.Get("/book/{id}", MakeGetBookById(b.Opts.Book))
 	})
-	r.Get("/books", MakeGetAllBooks(b.Opts.Book))
 	return nil
 }

@@ -2,6 +2,7 @@ package centralized
 
 import (
 	"github.com/spf13/viper"
+	"net/http"
 	"rest-api/internal/pkg/asynq"
 	"rest-api/internal/pkg/config"
 	"rest-api/internal/pkg/mongo"
@@ -30,4 +31,10 @@ func getConfiguration(environment *config.Environment) error {
 		return err
 	}
 	return nil
+}
+
+func Listen(addr string, handler http.Handler) {
+	if err := http.ListenAndServe(addr, handler); err != nil {
+		panic(err)
+	}
 }

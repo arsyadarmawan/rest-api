@@ -47,14 +47,16 @@ func (b BookRepository) Get(ctx context.Context) (books []*ent.Book, err error) 
 }
 
 func (b BookRepository) GetById(ctx context.Context, id string) (record *ent.Book, err error) {
-	errCode := b.collectionName().FindOne(ctx, bson.D{}).Decode(record)
+	filter := bson.M{"_id": id}
+	book := ent.Book{}
+	errCode := b.collectionName().FindOne(ctx, filter).Decode(&book)
 	if errCode != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			err = errors.New("document not found")
 			return
 		}
 	}
-	return
+	return &book, nil
 }
 
 func (b BookRepository) Create(ctx context.Context, record *ent.Book) error {
@@ -71,6 +73,14 @@ func (b BookRepository) DeleteById(ctx context.Context, id string) error {
 	_, err := b.collectionName().DeleteOne(ctx, filter)
 	if err != nil {
 		return err
+	}
+	return nil
+}
+
+func (b BookRepository) Update(ctx context.Context, record *ent.Book) error {
+	_, err := b.collectionName().UpdateOne(ctx, bson.M{"_id": record.ID}, bson.M{"$set": record})
+	if err != nil {
+		return errors.New("cannot updated data")
 	}
 	return nil
 }

@@ -7,3 +7,8 @@ redis:
   db: 0
   username: ""
   password: ""
+logger:
+  level: "trace"
+  caller: true
+  encoding: "json"
+  development: true
