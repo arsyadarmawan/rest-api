@@ -1,13 +1,6 @@
 name: Go CI
 
-on:
-  push:
-    branches:
-      - development
-  pull_request:
-    branches:
-      - development
-
+on: push
 jobs:
   build:
     name: Run Go unit tests
