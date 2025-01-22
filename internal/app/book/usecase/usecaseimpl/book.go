@@ -2,13 +2,13 @@ package usecaseimpl
 
 import (
 	"context"
+	"fmt"
 	"github.com/arsyadarmawan/asynq-distributed-task/enqueue"
 	"github.com/google/uuid"
 	"rest-api/internal/app/book/repository"
 	"rest-api/internal/app/book/usecase"
 	"rest-api/internal/app/ent"
 	"rest-api/internal/pkg/commonval"
-	"strconv"
 	"time"
 )
 
@@ -42,13 +42,14 @@ func (b Book) Get(ctx context.Context) (records []usecase.BookResponse, err erro
 	return
 }
 
-func (b Book) GetById(ctx context.Context, id int) (usecase.BookResponse, error) {
-	ent, err := b.Opts.Repository.GetById(ctx, strconv.Itoa(id))
+func (b Book) GetById(ctx context.Context, id string) (usecase.BookResponse, error) {
+	ent, err := b.Opts.Repository.GetById(ctx, id)
 	if err != nil {
 		return usecase.BookResponse{}, err
 	}
 
 	return usecase.BookResponse{
+		Id:          ent.ID,
 		Name:        ent.Name,
 		Description: ent.Description,
 	}, nil
@@ -67,11 +68,28 @@ func (b Book) Delete(ctx context.Context, id string) error {
 }
 
 func (b Book) convertCmdIntoEnt(cmd usecase.BookRequest) *ent.Book {
+	dateStr := "2025-01-14"
+	releaseDateFormat, _ := time.Parse(cmd.ReleaseDate, dateStr)
+
 	return &ent.Book{
 		ID:          uuid.New().String(),
 		Name:        cmd.Name,
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
+		PublishedBy: cmd.PublishedBy,
+		Author:      cmd.Author,
+		ReleaseDate: releaseDateFormat,
 		Description: cmd.Description,
 	}
+}
+
+func (b Book) Update(ctx context.Context, id string) error {
+	bookRecord, err := b.Opts.Repository.GetById(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	bookRecord.Name = fmt.Sprintf("Updated %s", bookRecord.Name)
+	bookRecord.UpdatedAt = time.Now()
+	return b.Opts.Repository.Update(ctx, bookRecord)
 }

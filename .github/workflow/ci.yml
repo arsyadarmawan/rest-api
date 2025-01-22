@@ -1,0 +1,28 @@
+name: Go CI
+
+on:
+  push:
+    branches:
+      - development
+  pull_request:
+    branches:
+      - development
+
+jobs:
+  build:
+    name: Run Go unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.13
+
+      - name: Get Go dependencies
+        run: go get -v -t -d ./...
+
+      - name: Run Tests
+        run: go test ./... -v
