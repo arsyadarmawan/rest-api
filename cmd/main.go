@@ -1,10 +1,10 @@
 package main
 
 import (
+	"github.com/arsyadarmawan/rest-api/internal/pkg/asynq"
+	"github.com/arsyadarmawan/rest-api/internal/pkg/centralized"
+	"github.com/arsyadarmawan/rest-api/internal/pkg/chi"
 	"net/http"
-	"rest-api/internal/pkg/asynq"
-	"rest-api/internal/pkg/centralized"
-	"rest-api/internal/pkg/chi"
 )
 
 func main() {

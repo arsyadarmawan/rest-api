@@ -3,7 +3,7 @@ package asynq
 import (
 	"fmt"
 	"github.com/arsyadarmawan/asynq-distributed-task/client"
-	"rest-api/internal/pkg/config"
+	"github.com/arsyadarmawan/rest-api/internal/pkg/config"
 )
 
 var AsynqClient *client.Client

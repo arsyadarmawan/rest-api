@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"rest-api/internal/app/ent"
+	"github.com/arsyadarmawan/rest-api/internal/app/ent"
 )
 
 //go:generate mockgen -source=book.go -destination=repositorymock/book_mock.go -package=repositorymock

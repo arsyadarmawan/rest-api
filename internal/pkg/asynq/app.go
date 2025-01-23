@@ -3,11 +3,11 @@ package asynq
 import (
 	"context"
 	"github.com/arsyadarmawan/asynq-distributed-task/runner"
+	"github.com/arsyadarmawan/rest-api/internal/app/book/delivery/worker"
+	"github.com/arsyadarmawan/rest-api/internal/app/book/repository/repositoryimpl"
+	"github.com/arsyadarmawan/rest-api/internal/app/book/usecase/usecaseimpl"
+	"github.com/arsyadarmawan/rest-api/internal/pkg/mongo"
 	"github.com/hibiken/asynq"
-	"rest-api/internal/app/book/delivery/worker"
-	"rest-api/internal/app/book/repository/repositoryimpl"
-	"rest-api/internal/app/book/usecase/usecaseimpl"
-	"rest-api/internal/pkg/mongo"
 )
 
 func InitServeMuxAsynq() {

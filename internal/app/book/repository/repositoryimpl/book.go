@@ -3,10 +3,10 @@ package repositoryimpl
 import (
 	"context"
 	"errors"
+	"github.com/arsyadarmawan/rest-api/internal/app/ent"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"log"
-	"rest-api/internal/app/ent"
 )
 
 type BookRepositoryOpts struct {

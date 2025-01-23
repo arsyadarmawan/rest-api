@@ -7,7 +7,7 @@ package usecasemock
 import (
 	context "context"
 	reflect "reflect"
-	usecase "rest-api/internal/app/book/usecase"
+	usecase "github.com/arsyadarmawan/rest-api/internal/app/book/usecase"
 
 	gomock "github.com/golang/mock/gomock"
 )

@@ -2,8 +2,8 @@ package asynq
 
 import (
 	"github.com/arsyadarmawan/asynq-distributed-task/server"
+	"github.com/arsyadarmawan/rest-api/internal/pkg/config"
 	"github.com/hibiken/asynq"
-	"rest-api/internal/pkg/config"
 )
 
 var AsynqServer *server.Server
