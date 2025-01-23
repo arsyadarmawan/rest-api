@@ -1,11 +1,11 @@
 package centralized
 
 import (
+	"github.com/arsyadarmawan/rest-api/internal/pkg/asynq"
+	"github.com/arsyadarmawan/rest-api/internal/pkg/config"
+	"github.com/arsyadarmawan/rest-api/internal/pkg/mongo"
 	"github.com/spf13/viper"
 	"net/http"
-	"rest-api/internal/pkg/asynq"
-	"rest-api/internal/pkg/config"
-	"rest-api/internal/pkg/mongo"
 )
 
 var EnvConfig config.Environment

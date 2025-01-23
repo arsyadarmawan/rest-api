@@ -1,9 +1,9 @@
 package worker
 
 import (
+	"github.com/arsyadarmawan/rest-api/internal/app/book/usecase"
+	"github.com/arsyadarmawan/rest-api/internal/pkg/commonval"
 	"github.com/hibiken/asynq"
-	"rest-api/internal/app/book/usecase"
-	"rest-api/internal/pkg/commonval"
 )
 
 type BookRegistryWorkerOpts struct {

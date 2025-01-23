@@ -7,7 +7,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	//"github.com/sirupsen/logrus"
-	"rest-api/internal/app/book/usecase"
+	"github.com/arsyadarmawan/rest-api/internal/app/book/usecase"
 )
 
 func MakeDeleteRepository(book usecase.Book) func(context.Context, *asynq.Task) error {

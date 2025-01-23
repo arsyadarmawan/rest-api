@@ -7,7 +7,7 @@ package repositorymock
 import (
 	context "context"
 	reflect "reflect"
-	ent "rest-api/internal/app/ent"
+	ent "github.com/arsyadarmawan/rest-api/internal/app/ent"
 
 	gomock "github.com/golang/mock/gomock"
 )

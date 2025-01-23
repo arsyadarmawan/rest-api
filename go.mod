@@ -1,8 +1,7 @@
-module rest-api
+module github.com/arsyadarmawan/rest-api
 
 go 1.22.0
 
-toolchain go1.23.2
 
 require (
 	github.com/arsyadarmawan/asynq-distributed-task v1.0.1

@@ -2,9 +2,9 @@ package mongo
 
 import (
 	"context"
+	"github.com/arsyadarmawan/rest-api/internal/pkg/config"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
-	"rest-api/internal/pkg/config"
 )
 
 var MongoConfig *mongo.Database

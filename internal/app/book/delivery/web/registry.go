@@ -1,11 +1,11 @@
 package web
 
 import (
+	"github.com/arsyadarmawan/rest-api/internal/app/book/usecase"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/httprate"
 	"github.com/go-chi/render"
 	"net/http"
-	"rest-api/internal/app/book/usecase"
 	"time"
 )
 
