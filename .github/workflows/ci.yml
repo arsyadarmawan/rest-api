@@ -4,10 +4,13 @@ on:
   push:
     branches:
       - development
+      - master
+      - staging
   pull_request:
     branches:
       - development
-
+      - master
+      - staging
 jobs:
   build:
     name: Run Go unit tests
