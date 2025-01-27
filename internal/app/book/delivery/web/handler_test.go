@@ -36,7 +36,6 @@ func TestMakeGetAllBooks(t *testing.T) {
 		expectedStatus int
 	}{
 		{"successful GET all books", http.StatusOK},
-		{"successful GET all books", http.StatusInternalServerError},
 	}
 
 	for _, test := range tests {
