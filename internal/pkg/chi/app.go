@@ -18,7 +18,6 @@ func NewChiRoutes() http.Handler {
 	chi.Use(corsMiddleware())
 	registerRoutes(chi)
 	return http.TimeoutHandler(chi, 120*time.Minute, `{"Message": "Service Unavailable"}`)
-
 }
 
 func registerRoutes(r *chi2.Mux) *chi2.Mux {

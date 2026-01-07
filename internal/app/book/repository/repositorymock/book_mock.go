@@ -7,8 +7,9 @@ package repositorymock
 import (
 	context "context"
 	reflect "reflect"
-	ent "github.com/arsyadarmawan/rest-api/internal/app/ent"
 
+	ent "github.com/arsyadarmawan/rest-api/internal/app/ent"
+	error "github.com/arsyadarmawan/rest-api/internal/pkg/error"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -36,10 +37,10 @@ func (m *MockBookRepository) EXPECT() *MockBookRepositoryMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockBookRepository) Create(ctx context.Context, record *ent.Book) error {
+func (m *MockBookRepository) Create(ctx context.Context, record *ent.Book) error.AppError {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", ctx, record)
-	ret0, _ := ret[0].(error)
+	ret0, _ := ret[0].(error.AppError)
 	return ret0
 }
 
@@ -50,10 +51,10 @@ func (mr *MockBookRepositoryMockRecorder) Create(ctx, record interface{}) *gomoc
 }
 
 // DeleteById mocks base method.
-func (m *MockBookRepository) DeleteById(ctx context.Context, id string) error {
+func (m *MockBookRepository) DeleteById(ctx context.Context, id string) error.AppError {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteById", ctx, id)
-	ret0, _ := ret[0].(error)
+	ret0, _ := ret[0].(error.AppError)
 	return ret0
 }
 
@@ -64,26 +65,26 @@ func (mr *MockBookRepositoryMockRecorder) DeleteById(ctx, id interface{}) *gomoc
 }
 
 // Get mocks base method.
-func (m *MockBookRepository) Get(ctx context.Context) ([]*ent.Book, error) {
+func (m *MockBookRepository) Get(ctx context.Context, getter ent.BookGetter) ([]*ent.Book, error.AppError) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Get", ctx)
+	ret := m.ctrl.Call(m, "Get", ctx, getter)
 	ret0, _ := ret[0].([]*ent.Book)
-	ret1, _ := ret[1].(error)
+	ret1, _ := ret[1].(error.AppError)
 	return ret0, ret1
 }
 
 // Get indicates an expected call of Get.
-func (mr *MockBookRepositoryMockRecorder) Get(ctx interface{}) *gomock.Call {
+func (mr *MockBookRepositoryMockRecorder) Get(ctx, getter interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockBookRepository)(nil).Get), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockBookRepository)(nil).Get), ctx, getter)
 }
 
 // GetById mocks base method.
-func (m *MockBookRepository) GetById(ctx context.Context, id string) (*ent.Book, error) {
+func (m *MockBookRepository) GetById(ctx context.Context, id string) (*ent.Book, error.AppError) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetById", ctx, id)
 	ret0, _ := ret[0].(*ent.Book)
-	ret1, _ := ret[1].(error)
+	ret1, _ := ret[1].(error.AppError)
 	return ret0, ret1
 }
 
@@ -94,10 +95,10 @@ func (mr *MockBookRepositoryMockRecorder) GetById(ctx, id interface{}) *gomock.C
 }
 
 // Update mocks base method.
-func (m *MockBookRepository) Update(ctx context.Context, record *ent.Book) error {
+func (m *MockBookRepository) Update(ctx context.Context, record *ent.Book) error.AppError {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", ctx, record)
-	ret0, _ := ret[0].(error)
+	ret0, _ := ret[0].(error.AppError)
 	return ret0
 }
 

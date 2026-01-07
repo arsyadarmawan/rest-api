@@ -8,6 +8,7 @@ import (
 	"github.com/arsyadarmawan/rest-api/internal/app/book/usecase"
 	"github.com/arsyadarmawan/rest-api/internal/app/ent"
 	"github.com/arsyadarmawan/rest-api/internal/pkg/commonval"
+	error2 "github.com/arsyadarmawan/rest-api/internal/pkg/error"
 	"github.com/google/uuid"
 	"time"
 )
@@ -27,9 +28,13 @@ func NewBookImpl(opt BookOpts) *Book {
 	}
 }
 
-func (b Book) Get(ctx context.Context) (records []usecase.BookResponse, err error) {
-	bookRecords, err := b.Opts.Repository.Get(ctx)
-	if err != nil {
+func (b Book) Get(ctx context.Context, getter usecase.BookGetter) (records []usecase.BookResponse, err *error2.AppError) {
+	request := ent.BookGetter{
+		Limit:  commonval.ParseStringToInt(getter.Limit),
+		Offset: commonval.ParseStringToInt(getter.Offset),
+	}
+	bookRecords, errorDB := b.Opts.Repository.Get(ctx, request)
+	if errorDB != nil {
 		return []usecase.BookResponse{}, err
 	}
 	for _, record := range bookRecords {
@@ -42,7 +47,7 @@ func (b Book) Get(ctx context.Context) (records []usecase.BookResponse, err erro
 	return
 }
 
-func (b Book) GetById(ctx context.Context, id string) (usecase.BookResponse, error) {
+func (b Book) GetById(ctx context.Context, id string) (usecase.BookResponse, *error2.AppError) {
 	ent, err := b.Opts.Repository.GetById(ctx, id)
 	if err != nil {
 		return usecase.BookResponse{}, err
@@ -55,15 +60,15 @@ func (b Book) GetById(ctx context.Context, id string) (usecase.BookResponse, err
 	}, nil
 }
 
-func (b Book) Create(ctx context.Context, cmd usecase.BookRequest) error {
+func (b Book) Create(ctx context.Context, cmd usecase.BookRequest) *error2.AppError {
 	ent := b.convertCmdIntoEnt(cmd)
 	if err := b.Opts.AsynqEnqueuer.Enqueue(ctx, commonval.BookWorkerAsynq, ent.ID); err != nil {
-		return err
+		return error2.InternalSystemError()
 	}
 	return b.Opts.Repository.Create(ctx, ent)
 }
 
-func (b Book) Delete(ctx context.Context, id string) error {
+func (b Book) Delete(ctx context.Context, id string) *error2.AppError {
 	return b.Opts.Repository.DeleteById(ctx, id)
 }
 
@@ -83,7 +88,7 @@ func (b Book) convertCmdIntoEnt(cmd usecase.BookRequest) *ent.Book {
 	}
 }
 
-func (b Book) Update(ctx context.Context, id string) error {
+func (b Book) Update(ctx context.Context, id string) *error2.AppError {
 	bookRecord, err := b.Opts.Repository.GetById(ctx, id)
 	if err != nil {
 		return err

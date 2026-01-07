@@ -12,3 +12,8 @@ type Book struct {
 	ReleaseDate time.Time `bson:"releaseDate"`
 	Description string    `bson:",notnull,omitempty"`
 }
+
+type BookGetter struct {
+	Limit  int `json:"limit"`
+	Offset int `json:"offset"`
+}

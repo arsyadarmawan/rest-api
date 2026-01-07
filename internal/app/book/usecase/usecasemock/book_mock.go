@@ -7,8 +7,8 @@ package usecasemock
 import (
 	context "context"
 	reflect "reflect"
-	usecase "github.com/arsyadarmawan/rest-api/internal/app/book/usecase"
 
+	usecase "github.com/arsyadarmawan/rest-api/internal/app/book/usecase"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -64,18 +64,18 @@ func (mr *MockBookMockRecorder) Delete(ctx, id interface{}) *gomock.Call {
 }
 
 // Get mocks base method.
-func (m *MockBook) Get(ctx context.Context) ([]usecase.BookResponse, error) {
+func (m *MockBook) Get(ctx context.Context, book usecase.BookGetter) ([]usecase.BookResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Get", ctx)
+	ret := m.ctrl.Call(m, "Get", ctx, book)
 	ret0, _ := ret[0].([]usecase.BookResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Get indicates an expected call of Get.
-func (mr *MockBookMockRecorder) Get(ctx interface{}) *gomock.Call {
+func (mr *MockBookMockRecorder) Get(ctx, book interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockBook)(nil).Get), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockBook)(nil).Get), ctx, book)
 }
 
 // GetById mocks base method.

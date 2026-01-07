@@ -12,4 +12,10 @@ type BookRequest struct {
 	ReleaseDate string `json:"releaseDate"`
 	PublishedBy string `json:"publishedBy"`
 	Author      string `json:"author"`
+	Image       string `json:"image"`
+}
+
+type BookGetter struct {
+	Limit  string `json:"limit"`
+	Offset string `json:"offset"`
 }
